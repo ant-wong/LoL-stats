@@ -17,7 +17,7 @@ class Home extends Component {
           <Col span={12} offset={6}>
           <section>
             <Search
-              placeholder="input search text"
+              placeholder="Search for your favorite players or friends!"
               className="search-input"
               onSearch={(value) => {this.props.findSummoner(value)}}
             />
