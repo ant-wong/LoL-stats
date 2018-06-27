@@ -8,19 +8,18 @@ import Navbar from './components/Navbar'
 import Home from './components/Home'
 import Profile from './components/Profile'
 import NotFound from './components/NotFound';
+import NoUser from './components/NoUser';
 
-/* API KEY */
-// RGAPI-ab0e9baf-5637-45b4-9f15-0e43b7ef6b65
 
 class App extends Component {
   constructor() {
     super()
     this.state = {
       player: {},
-      playerGames: []
+      playerGames: [],
+      filteredData: []
     }
   }
-
 
   /*** CLIENT SIDE API CALLS TO SERVER ***/
 
@@ -29,33 +28,96 @@ class App extends Component {
     let response = await axios.post('http://localhost:6060/summonerName', {
       user: value
     })
-    response.status === 200 ? this.props.history.push(`/summoner/${response.data.accountId}`) : this.props.history.push('/')
+    this.setState({
+      player: response.data.summoner,
+      playerGames: response.data.matches
+    })
+    response.status === 200 ? await this.props.history.push(`/summoner/${response.data.summoner.accountId}`) : await this.props.history.push('/notfound')
   }
 
-  /* USER INFO */
+  /* FOR WHEN USER REFRESHES */
   getUserInfo = async (id) => {
     let response = await axios.get(`http://localhost:6060/summoner/${id}`)
     this.setState({
-      player: response.data
+      player: response.data.summoner,
+      playerGames: response.data.matches
     })
   }
 
-  /* GET MATCHES */
-  getLatestMatches = async (id) => {
-    let response = await axios.post(`http://localhost:6060/summonerMatches`, {
-      id: id
-    })
-    let latestMatches = response.data.matches.slice(0, 10)
-    this.setState({
-      playerGames: latestMatches
-    })
-  }
   /* MATCH DETAILS */
   getMatchDetails = async (id) => {
     let response = await axios.post('http://localhost:6060/matchDetails', {
       id: id
     })
-    console.log(await response.data)
+
+    function Game(name, win, length, spells, champion, kda, items, champLvl, totalCreep, creepPerMin) {
+      this.name = name
+      this.win = win
+      this.length = length
+      this.spells = spells
+      this.champion = champion
+      this.kda = kda
+      this.items = items
+      this.champLvl = champLvl
+      this.totalCreep = totalCreep
+      this.creepPerMin = creepPerMin
+    }
+
+    let newGame = new Game()
+
+    newGame.name = this.state.player.name
+
+    Object.values(response.data).map((value) => {
+      this.state.playerGames.forEach(function(game) {
+        if(value.gameId === game.gameId) {
+          newGame.length = Math.floor(value.gameDuration / 60)
+          value.participants.forEach(function(player) {
+            if(player.championId === game.champion) {
+              newGame.win = String(player.stats.win)
+              newGame.spells = { spell1: player.spell1Id, spell2: player.spell2Id }
+              newGame.champion = player.championId
+              newGame.kda = player.stats.kills / player.stats.deaths
+              newGame.items = { item0: player.stats.item0, item1: player.stats.item1, item2: player.stats.item2, item3: player.stats.item3, item4: player.stats.item4, item5: player.stats.item5 }
+              newGame.champLvl = player.stats.champLevel
+              newGame.totalCreep = Object.values(player.timeline.creepsPerMinDeltas).map((score) => {
+                return score
+              })
+              newGame.creepPerMin = Math.floor(value.gameDuration / 60)
+            }
+          })
+        }
+      })
+    })
+    this.setState({
+      filteredData: this.state.filteredData.concat(newGame)
+    })
+    return await response.data
+  }
+
+  /*** STATUS CODE 429, WANTED TO REFACTOR THIS INTO CODE THAT IS MORE DRY ***/
+
+  // /* GET CHAMPION */
+  getChampion = async (id) => {
+    let response = await axios.post('http://localhost:6060/champion', {
+      id: id
+    })
+    return await response.data
+  }
+
+  /* GET SPELLS */
+  getSpells = async (id) => {
+    let response = await axios.post('http://localhost:6060/spells', {
+      id: id
+    })
+    return await response.data
+  }
+
+  /* GET ITEMS */
+  getItems = async (id) => {
+    let response = await axios.post('http://localhost:6060/items', {
+      id: id
+    })
+    return await response.data
   }
 
 
@@ -76,11 +138,14 @@ class App extends Component {
             return <Profile 
                       {...this.state} 
                       getUserInfo={this.getUserInfo}
-                      getLatestMatches={this.getLatestMatches}
                       getMatchDetails={this.getMatchDetails}
+                      getChampion={this.getChampion}
+                      // getSpells={this.getSpells}
+                      // getItems={this.getItems}
                   />
           }} />
-
+          {/* 404 */}
+          <Route path="/notfound" component={NoUser} />
           <Route path="*" component={NotFound} />
         </Switch>
 

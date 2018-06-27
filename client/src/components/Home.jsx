@@ -9,7 +9,7 @@ class Home extends Component {
 
   render() {
     return (
-      <div>
+      <div className="landing-page">
         <header className="welcome-message">
           <h1>Welcome to LoL Stats!</h1>
           <h3>Check out and compare your stats with friends or Strangers</h3>

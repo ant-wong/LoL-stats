@@ -6,11 +6,8 @@ class NoUser extends Component {
     return (
       <div>
         <header>
-
+          <h1>We could not find that summoner :(</h1>
         </header>
-        <section>
-
-        </section>
       </div>
     )
   }

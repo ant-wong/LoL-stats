@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { Input, Row, Col, Button } from 'antd'
+import { Row, Col, Button } from 'antd'
 import { Link } from 'react-router-dom'
 
 import Logo from '../img/league-logo.png'
 
-// const Search = Input.Search
 
 export default class Navbar extends Component {
 	render() {
@@ -28,12 +27,6 @@ export default class Navbar extends Component {
 					<Col span={1} offset={8}>
 						<Button>Log In</Button>
 					</Col>
-
-				{/* <Search
-					placeholder="Search Summoners"
-					onSearch={value => console.log(value)}
-					className="nav-search"
-				/> */}
 				</Row>
 			</nav>
 		)
