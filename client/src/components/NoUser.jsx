@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 
-class Results extends Component {
+class NoUser extends Component {
   render() {
     return (
       <div>
@@ -16,4 +16,4 @@ class Results extends Component {
   }
 }
 
-export default withRouter(Results)
+export default withRouter(NoUser)

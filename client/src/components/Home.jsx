@@ -1,23 +1,30 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import axios from 'axios'
+
+import { Input, Row, Col } from 'antd'
+
+const Search = Input.Search
 
 class Home extends Component {
-
-  async componentDidMount() {
-    const res = await axios.get('https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/BFY%20Meowington/?api_key=RGAPI-e787d01c-fa81-4d3b-b34d-8f26a7a9cdea')
-    console.log(await res)
-  }
 
   render() {
     return (
       <div>
-        <header>
-          welcome.
+        <header className="welcome-message">
+          <h1>Welcome to LoL Stats!</h1>
+          <h3>Check out and compare your stats with friends or Strangers</h3>
         </header>
-        <section>
-          content
-        </section>
+        <Row>
+          <Col span={12} offset={6}>
+          <section>
+            <Search
+              placeholder="input search text"
+              className="search-input"
+              onSearch={(value) => {this.props.findSummoner(value)}}
+            />
+          </section>
+          </Col>
+        </Row>
       </div>
     )
   }
