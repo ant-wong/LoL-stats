@@ -6,7 +6,6 @@ import { Input, Row, Col } from 'antd'
 const Search = Input.Search
 
 class Home extends Component {
-
   render() {
     return (
       <div className="landing-page">

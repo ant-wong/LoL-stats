@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Row, Col } from 'antd'
 
+import { Row, Col } from 'antd'
 
 class Profile extends Component {
   constructor() {
@@ -16,6 +16,7 @@ class Profile extends Component {
     await this.props.playerGames.map(element => {
       return this.props.getMatchDetails(element.gameId)
     })
+    /* LOADING FLAG */
     await this.setState({
       loading: false
     })
@@ -30,7 +31,7 @@ class Profile extends Component {
         return <Col span={8}>
           <div key={game.gameId} className={(game.win === "true") ? "win-stats" : "loss-stats"}>
             <h1>{this.props.player.name}</h1>
-            <h2>Champion: {game.champion}</h2>
+            <h2>Champion-Id: {game.champion}</h2>
             <p>Level: {game.champLvl}</p>
             <p className="win-lose">{(game.win === "true") ? "WIN" : "LOSE"}</p>
             <h3>KDA : {String((game.kda).toFixed(2))}</h3>
@@ -45,7 +46,11 @@ class Profile extends Component {
               ITEMS USED
               <ul>
                 {Object.values(game.items).map(item => {
-                  return <li>{item}</li>
+                  if(item === 0) {
+                    return <li>N/A</li>
+                  } else {
+                    return <li>{item}</li>
+                  }
                 })}
               </ul>
             </div>

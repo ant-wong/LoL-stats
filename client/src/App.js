@@ -49,7 +49,7 @@ class App extends Component {
     let response = await axios.post('http://localhost:6060/matchDetails', {
       id: id
     })
-
+    /* CONSTRUCTOR */
     function Game(name, win, length, spells, champion, kda, items, champLvl, totalCreep, creepPerMin) {
       this.name = name
       this.win = win

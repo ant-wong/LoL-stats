@@ -6,11 +6,8 @@ class NotFound extends Component {
     return (
       <div>
         <header>
-          :(
+          <h1>You seem to be lost.</h1>
         </header>
-        <section>
-          nothing
-        </section>
       </div>
     )
   }
